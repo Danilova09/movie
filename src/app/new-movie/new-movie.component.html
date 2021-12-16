@@ -1,0 +1,9 @@
+<form class="form" (ngSubmit)="onSubmit()" ngNativeValidate>
+  <div class="form-group d-flex">
+    <input type="text"
+           name="movieName" id="movieName"
+           class="form-control d-inline-block"
+           required [(ngModel)]="movieName">
+    <button class="btn btn-primary ml-3 px-4" type="submit">add</button>
+  </div>
+</form>
