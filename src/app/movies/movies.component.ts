@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Movie } from '../shared/movie.model';
-import { pipe } from 'rxjs';
+import { pipe, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MoviesService } from '../shared/movies.service';
 
@@ -13,6 +13,7 @@ import { MoviesService } from '../shared/movies.service';
 export class MoviesComponent implements OnInit, OnDestroy {
   moviesList: Movie[] = [];
   isFetching: boolean = false;
+  isFetchingSubscription!: Subscription;
 
   constructor(
     private http: HttpClient,
@@ -25,14 +26,14 @@ export class MoviesComponent implements OnInit, OnDestroy {
     this.moviesService.moviesChange.subscribe((movies: Movie[]) => {
       this.moviesList = movies;
     })
-    this.moviesService.isFetchingChange.subscribe((isFetching: boolean) => {
+    this.isFetchingSubscription = this.moviesService.isFetchingChange.subscribe((isFetching: boolean) => {
       this.isFetching = isFetching;
     })
     this.moviesService.fetchData();
   }
 
   ngOnDestroy() {
-
+    this.isFetchingSubscription.unsubscribe();
   }
 
 }

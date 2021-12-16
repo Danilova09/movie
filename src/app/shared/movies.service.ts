@@ -9,6 +9,7 @@ export class MoviesService {
   movies: Movie[] = [];
   moviesChange = new Subject<Movie[]>();
   isFetchingChange = new Subject<boolean>();
+  isAddingMovie = new Subject<boolean>();
 
   constructor(
     private http: HttpClient,
@@ -36,7 +37,16 @@ export class MoviesService {
       })
   }
 
-  addMovie(movie: Movie) {
-    this.movies.push(movie);
+  addMovieSecond(movieName: string) {
+    this.isAddingMovie.next(true);
+    const body = {movieName: movieName};
+    this.http.post<{[id: string]: string}>( 'https://movielist-1dbc6-default-rtdb.firebaseio.com/movies.json', body)
+      .subscribe(result => {
+        const id = result.name;
+        const  movie = new Movie(id, movieName);
+        this.isAddingMovie.next(false);
+        this.movies.push(movie);
+      })
   }
+
 }

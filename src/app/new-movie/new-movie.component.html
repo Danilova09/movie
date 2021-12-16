@@ -7,10 +7,10 @@
              required [(ngModel)]="movieName">
     </div>
     <div class="col-1">
-      <button class="btn btn-primary px-4" type="submit">add</button>
+      <button class="btn btn-primary px-4" type="submit" [disabled]="isAddingMovie">add</button>
     </div>
     <div class="col-1">
-      <span *ngIf="isFetching"
+      <span *ngIf="isAddingMovie"
             class="spinner-border spinner-border-sm ml-3 text-primary" role="status" aria-hidden="true"></span>
     </div>
   </div>
