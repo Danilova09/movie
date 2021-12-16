@@ -7,6 +7,8 @@ import { MoviesComponent } from './movies/movies.component';
 import { MovieItemComponent } from './movies/movie-item/movie-item.component';
 import { NewMovieComponent } from './new-movie/new-movie.component';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { MoviesService } from './shared/movies.service';
 
 @NgModule({
   declarations: [
@@ -19,8 +21,9 @@ import { FormsModule } from '@angular/forms';
     BrowserModule,
     FormsModule,
     AppRoutingModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [MoviesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

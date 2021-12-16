@@ -1,9 +1,17 @@
 <form class="form" (ngSubmit)="onSubmit()" ngNativeValidate>
-  <div class="form-group d-flex">
-    <input type="text"
-           name="movieName" id="movieName"
-           class="form-control d-inline-block"
-           required [(ngModel)]="movieName">
-    <button class="btn btn-primary ml-3 px-4" type="submit">add</button>
+  <div class="row justify-content-center align-items-center">
+    <div class="col-10">
+      <input type="text"
+             name="movieName" id="movieName"
+             class="form-control d-inline-block"
+             required [(ngModel)]="movieName">
+    </div>
+    <div class="col-1">
+      <button class="btn btn-primary px-4" type="submit">add</button>
+    </div>
+    <div class="col-1">
+      <span *ngIf="isFetching"
+            class="spinner-border spinner-border-sm ml-3 text-primary" role="status" aria-hidden="true"></span>
+    </div>
   </div>
 </form>

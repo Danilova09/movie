@@ -1,4 +1,11 @@
-<h4 class="mt-5">Movies list</h4>
-<app-movie-item></app-movie-item>
-<app-movie-item></app-movie-item>
-<app-movie-item></app-movie-item>
+<div class="d-flex justify-content-center align-items-center mt-5">
+  <h4 class="mt-2">Movies list</h4>
+  <span *ngIf="isFetching"
+        class="spinner-border spinner-border-sm ml-3 text-black-50"
+        role="status" aria-hidden="true"></span>
+</div>
+
+<div *ngIf="!isFetching">
+  <app-movie-item *ngFor="let movie of moviesList"
+                  [movie]="movie"></app-movie-item>
+</div>
