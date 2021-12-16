@@ -1,7 +1,7 @@
 import { Movie } from './movie.model';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable()
@@ -10,6 +10,7 @@ export class MoviesService {
   moviesChange = new Subject<Movie[]>();
   isFetchingChange = new Subject<boolean>();
   isAddingMovie = new Subject<boolean>();
+  isDeletingChange = new Subject<boolean>();
 
   constructor(
     private http: HttpClient,
@@ -49,4 +50,13 @@ export class MoviesService {
       })
   }
 
+  deleteMovie(movie: Movie) {
+    this.isDeletingChange.next(true);
+    this.http.delete(`https://movielist-1dbc6-default-rtdb.firebaseio.com/movies/${movie.id}.json`)
+      .subscribe(result => {
+        this.isDeletingChange.next(false);
+        const deleteIndex = this.movies.indexOf(movie);
+        this.movies.splice(deleteIndex, 1);
+      });
+  }
 }
