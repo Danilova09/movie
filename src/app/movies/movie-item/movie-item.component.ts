@@ -1,6 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subscription } from 'rxjs';
 import { MoviesService } from '../../shared/movies.service';
 import { Movie } from '../../shared/movie.model';
 
@@ -9,26 +8,21 @@ import { Movie } from '../../shared/movie.model';
   templateUrl: './movie-item.component.html',
   styleUrls: ['./movie-item.component.css']
 })
-export class MovieItemComponent implements OnInit, OnDestroy {
+export class MovieItemComponent {
   @Input() movie!: Movie;
   isDeleting = false;
-  deletingSubscription!: Subscription;
+
   constructor(
     private http: HttpClient,
     private moviesService: MoviesService,
   ) { }
 
-  ngOnInit(): void {
-    this.deletingSubscription = this.moviesService.isDeletingChange.subscribe((isDeleting: boolean) => {
-      this.isDeleting = isDeleting;
-    })
-  }
-
   delete() {
-    this.moviesService.deleteMovie(this.movie);
-  }
-
-  ngOnDestroy() {
-    this.deletingSubscription.unsubscribe();
+    this.isDeleting = true
+    this.http.delete(`https://movielist-1dbc6-default-rtdb.firebaseio.com/movies/${this.movie.id}.json`)
+      .subscribe(result => {
+        this.isDeleting = false;
+        this.moviesService.fetchData();
+      });
   }
 }

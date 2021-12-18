@@ -10,7 +10,6 @@ export class MoviesService {
   moviesChange = new Subject<Movie[]>();
   isFetchingChange = new Subject<boolean>();
   isAddingMovie = new Subject<boolean>();
-  isDeletingChange = new Subject<boolean>();
 
   constructor(
     private http: HttpClient,
@@ -24,10 +23,14 @@ export class MoviesService {
     this.isFetchingChange.next(true);
     this.http.get<{ [id: string]: Movie }>('https://movielist-1dbc6-default-rtdb.firebaseio.com/movies.json')
       .pipe(map(result => {
-        return Object.keys(result).map(id => {
-          const movieData = result[id];
-          return new Movie(id, movieData.movieName);
-        })
+        if (result === null) {
+          return [];
+        } else {
+          return Object.keys(result).map(id => {
+            const movieData = result[id];
+            return new Movie(id, movieData.movieName);
+          })
+        }
       }))
       .subscribe(movies => {
         this.movies = movies;
@@ -38,25 +41,14 @@ export class MoviesService {
       })
   }
 
-  addMovieSecond(movieName: string) {
+  addMovie(movieName: string) {
     this.isAddingMovie.next(true);
     const body = {movieName: movieName};
-    this.http.post<{[id: string]: string}>( 'https://movielist-1dbc6-default-rtdb.firebaseio.com/movies.json', body)
+    this.http.post<{ [id: string]: string }>('https://movielist-1dbc6-default-rtdb.firebaseio.com/movies.json', body)
       .subscribe(result => {
-        const id = result.name;
-        const  movie = new Movie(id, movieName);
         this.isAddingMovie.next(false);
-        this.movies.push(movie);
+        this.fetchData();
       })
   }
 
-  deleteMovie(movie: Movie) {
-    this.isDeletingChange.next(true);
-    this.http.delete(`https://movielist-1dbc6-default-rtdb.firebaseio.com/movies/${movie.id}.json`)
-      .subscribe(result => {
-        this.isDeletingChange.next(false);
-        const deleteIndex = this.movies.indexOf(movie);
-        this.movies.splice(deleteIndex, 1);
-      });
-  }
 }

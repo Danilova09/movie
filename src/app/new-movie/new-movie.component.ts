@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MoviesService } from '../shared/movies.service';
-import { HttpClient } from '@angular/common/http';
-import { Movie } from '../shared/movie.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,17 +14,16 @@ export class NewMovieComponent implements OnInit, OnDestroy {
 
   constructor(
     private moviesService: MoviesService,
-    private http: HttpClient,
   ) { }
 
   ngOnInit(): void {
-    this.addingMovieSubscription = this.moviesService.isAddingMovie.subscribe((isAdding:boolean) => {
+    this.addingMovieSubscription = this.moviesService.isAddingMovie.subscribe((isAdding: boolean) => {
       this.isAddingMovie = isAdding;
     })
   }
 
   onSubmit() {
-    this.moviesService.addMovieSecond(this.movieName);
+    this.moviesService.addMovie(this.movieName);
   }
 
   ngOnDestroy() {
